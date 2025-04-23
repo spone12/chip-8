@@ -1,0 +1,35 @@
+# Visual Studio / .NET build artifacts
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / JetBrains
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# .NET dependencies
+packages/
+.nuget/
+project.lock.json
+project.assets.json
+
+# Logs
+logs/
+*.log
+
+# Environment variables
+.env
+
+# VS Code workspace settings
+.vscode/
+
+# MacOS / Linux
+.DS_Store
+
+# Misc
+Thumbs.db
