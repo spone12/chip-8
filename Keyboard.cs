@@ -29,18 +29,14 @@ public class Keyboard
         { ConsoleKey.V,   0xF }
     };
 
-    public void SetKey(ushort opcode, byte[] V) {
+    public void SetKey(byte x, byte[] V) {
         
-        byte x = (byte)((opcode & 0x0F00) >> 8);
         int chip8Key = -1;
         
         while (true) {
-            Console.WriteLine("While");
+
             if (Console.KeyAvailable) {
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-                
-                Console.WriteLine(keyInfo.KeyChar);
-                Console.WriteLine(keyInfo.Key);
                 
                 if (_keyMap.TryGetValue(keyInfo.Key, out chip8Key)) {
                     V[x] = (byte)chip8Key;
