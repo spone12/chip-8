@@ -275,9 +275,9 @@ public class CPU
         // Если хоть один пиксель был стерт, то VF устанавливается в 1, иначе в 0.
         if ((opcode & 0xF000) == 0xD000) {
             
-            bool collision = display.Draw(opcode, V, I, memory);
+            bool collision = display.SetPixels(opcode, V, I, memory);
             V[0xF] = (byte)(collision ? 1 : 0);
-            display.PrintToConsole();
+            display.Draw();
             
             pc += 2;
             return;

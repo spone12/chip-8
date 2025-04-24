@@ -1,3 +1,4 @@
+using Raylib_cs;
 
 public class Chip8
 {
@@ -29,13 +30,17 @@ public class Chip8
     {
         try
         {
-            while (true) {
+            while (!Raylib.WindowShouldClose()) {
+                Raylib.BeginDrawing();
+                Raylib.ClearBackground(Color.Black);
+
                 cpu.Cycle();
-                Thread.Sleep(2);
+
+                Raylib.EndDrawing();
             }
-        }
-        catch (Exception ex)
-        {
+
+            Raylib.CloseWindow();
+        } catch (Exception ex) {
             Console.WriteLine("Ошибка во время выполнения: " + ex.Message);
         }
     }
