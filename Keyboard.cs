@@ -1,4 +1,4 @@
-
+using Raylib_cs;
 
 public class Keyboard
 {
@@ -9,7 +9,7 @@ public class Keyboard
     public void SetKeyDown(int index) => keys[index] = true; // Установить клавишу как нажатую
     public void SetKeyUp(int index) => keys[index] = false;  // Установить клавишу как отпущенную
     
-    Dictionary<ConsoleKey, int> _keyMap = new Dictionary<ConsoleKey, int>
+    Dictionary<ConsoleKey, int> _keyMapConsole = new Dictionary<ConsoleKey, int>
     {
         { ConsoleKey.D1, 0x1 },
         { ConsoleKey.D2, 0x2 },
@@ -29,7 +29,44 @@ public class Keyboard
         { ConsoleKey.V,   0xF }
     };
 
+    private Dictionary<int, KeyboardKey> _keyMap = new Dictionary<int, KeyboardKey>
+    {
+        { 0x0, KeyboardKey.X },
+        { 0x1, KeyboardKey.One },
+        { 0x2, KeyboardKey.Two },
+        { 0x3, KeyboardKey.Three },
+        { 0x4, KeyboardKey.Q },
+        { 0x5, KeyboardKey.W },
+        { 0x6, KeyboardKey.E },
+        { 0x7, KeyboardKey.A },
+        { 0x8, KeyboardKey.S },
+        { 0x9, KeyboardKey.D },
+        { 0xA, KeyboardKey.Z },
+        { 0xB, KeyboardKey.C },
+        { 0xC, KeyboardKey.Four },
+        { 0xD, KeyboardKey.R },
+        { 0xE, KeyboardKey.F },
+        { 0xF, KeyboardKey.V },
+    };
+
     public void SetKey(byte x, byte[] V) {
+    
+        while (true)
+        {
+            for (byte i = 0; i < 0xF; i++) {
+                if (Raylib.IsKeyPressed(_keyMap[i])) {
+                    V[x] = i;
+                    keys[i] = true;
+                    
+                    return;
+                } else {
+                    keys[i] = false;
+                }
+            }
+        }
+    }
+
+    public void SetKeyConsole(byte x, byte[] V) {
         
         int chip8Key = -1;
         
@@ -38,7 +75,7 @@ public class Keyboard
             if (Console.KeyAvailable) {
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
                 
-                if (_keyMap.TryGetValue(keyInfo.Key, out chip8Key)) {
+                if (_keyMapConsole.TryGetValue(keyInfo.Key, out chip8Key)) {
                     V[x] = (byte)chip8Key;
                     break;
                 }
