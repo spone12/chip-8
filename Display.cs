@@ -4,7 +4,7 @@ public class Display
 {
     public const ushort ScreenWidth = 64;            // Ширина дисплея CHIP-8
     public const ushort ScreenHeight = 32;           // Высота дисплея CHIP-8
-    public const ushort PixelSize = 15;           // Размер пикселей
+    public const ushort PixelSize = 10;           // Размер пикселей
     public const ushort FPS = 60;
 
     public bool[,] pixels = new bool[ScreenWidth, ScreenHeight]; // Массив для хранения состояния пикселей
