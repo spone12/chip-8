@@ -35,6 +35,7 @@ public class Chip8
                 Raylib.ClearBackground(Color.Black);
 
                 cpu.Cycle();
+                display.Draw();
 
                 Raylib.EndDrawing();
             }

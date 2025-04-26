@@ -277,8 +277,6 @@ public class CPU
             
             bool collision = display.SetPixels(opcode, V, I, memory);
             V[0xF] = (byte)(collision ? 1 : 0);
-            display.Draw();
-            
             pc += 2;
             return;
         }
@@ -386,5 +384,7 @@ public class CPU
            pc += 2;
            return;
        }
+       
+       Console.WriteLine($"Неизвестный opcode: {opcode:X4}");
     }
 }

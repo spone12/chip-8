@@ -5,7 +5,7 @@ public class Display
     public const ushort ScreenWidth = 64;            // Ширина дисплея CHIP-8
     public const ushort ScreenHeight = 32;           // Высота дисплея CHIP-8
     public const ushort PixelSize = 10;           // Размер пикселей
-    public const ushort FPS = 60;
+    public const ushort FPS = 100;
 
     public bool[,] pixels = new bool[ScreenWidth, ScreenHeight]; // Массив для хранения состояния пикселей
 
@@ -31,31 +31,46 @@ public class Display
         }
     }
 
-    public bool SetPixels(ushort opcode, byte[] V, ushort I, Memory memory) {
-        
-        byte height = (byte)(opcode & 0x000F);
+    public bool SetPixels(ushort opcode, byte[] V, ushort I, Memory memory)
+    {
         byte x = (byte)((opcode & 0x0F00) >> 8);
         byte y = (byte)((opcode & 0x00F0) >> 4);
+        byte height = (byte)(opcode & 0x000F);
+
+        bool collision = false; // Столкновение пикселей
         
-        bool collision = false;
-            
+        // Координаты начала рисования на экране
+        // Получаем значение из регистра V[x] и V[y], применяем модуль по ширине и высоте, чтобы не вылезать за края экрана
+        int startX = V[x] % ScreenWidth;
+        int startY = V[y] % ScreenHeight;
+        
+        // Каждая строка 1 байт из памяти
         for (int row = 0; row < height; row++) {
             byte spriteByte = memory[I + row];
             
-            for (byte bit = 0; bit < 8; bit++) {
-                int px = (V[x] + bit) % ScreenWidth;
-                int py = (V[y] + row) % ScreenHeight;
-                bool spritePixel = ((spriteByte >> (7 - bit)) & 1) == 1;
-
-                if (spritePixel) {
+            // В каждой строке ровно 8 битов => 8 пикселей по горизонтали.
+            for (int col = 0; col < 8; col++) {
+                
+                // Проверяем конкретный бит внутри байта
+                // 10000000 >> col 
+                if ((spriteByte & (0x80 >> col)) != 0) {
+                    
+                    // Вычисление реальной позиции пикселя на экране.
+                    int px = (startX + col) % ScreenWidth;
+                    int py = (startY + row) % ScreenHeight;
+                    
+                    // Если пиксель был уже включен (true), ставим флаг collision = true.
                     if (pixels[px, py]) collision = true;
+                    // XOR: инвертируем пиксель:
                     pixels[px, py] ^= true;
                 }
             }
         }
-
+        
+        // Возвращение результата: было ли в процессе рисования столкновение
         return collision;
     }
+
     
     public void PrintToConsole()
     {
