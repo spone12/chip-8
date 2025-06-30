@@ -7,22 +7,36 @@ public class CPU
     private ushort pc = 0x200;             // Программный счётчик. Начинается с адреса 0x200
     private Stack<ushort> stack = new Stack<ushort>(16); // Стек вызовов
     
-    private byte delayTimer = 0; // Таймер задержки
-    private byte soundTimer = 0; // Таймер звука
+    private byte delayTimer = 0;           // Таймер задержки
+    private byte soundTimer = 0;           // Таймер звука
     
     private Memory memory;                 // Ссылка на память
     private Display display;               // Ссылка на дисплей
     private Keyboard keyboard;             // Ссылка на клавиатуру
 
+    public bool drawFlag = false;         // Отрисовать кадр
+    public bool isDrawFlagRender = false; // Отрисовка кадров только через опкод Dxyn
+    
+    private bool waitingForKey = false;   // Ожидание ввода с клавиатуры
+    private byte waitingRegister = 0;     // Ожидаемый регистр ввода
+    
     public CPU(Memory memory, Display display, Keyboard keyboard)
     {
-        this.memory = memory;              // Присвоение памяти
-        this.display = display;            // Присвоение дисплея
-        this.keyboard = keyboard;          // Присвоение клавиатуры
+        this.memory = memory;             // Присвоение памяти
+        this.display = display;           // Присвоение дисплея
+        this.keyboard = keyboard;         // Присвоение клавиатуры
     }
 
     public void Cycle()
     {
+        // Fx0A - Ожидание ввода с клавиатуры
+        if (waitingForKey) {
+            if (keyboard.WaitForKey(V, waitingRegister)) {
+                waitingForKey = false;
+                pc += 2;
+            }
+        }
+        
         // Считывание двух байтов из памяти (один опкод = 2 байта)
         ushort opcode = (ushort)((memory[pc] << 8) | memory[pc + 1]);
         Execute(opcode); // Выполние опкода
@@ -277,14 +291,15 @@ public class CPU
             
             bool collision = display.SetPixels(opcode, V, I, memory);
             V[0xF] = (byte)(collision ? 1 : 0);
+            drawFlag = true;
             pc += 2;
             return;
         }
         
         // Ex9E SKP Vx Пропустить следующую команду если клавиша, номер которой хранится в регистре Vx, нажата
         if ((opcode & 0xF0FF) == 0xE09E) {
-
-            if (keyboard.IsKeyPressed(V[x])) {
+            
+            if (keyboard.IsKeyDown(V[x])) {
                 pc += 4;
             } else {
                 pc += 2;
@@ -294,8 +309,8 @@ public class CPU
         
         // ExA1 SKNP Vx Пропустить следующую команду если клавиша, номер которой хранится в регистре Vx, не нажата
         if ((opcode & 0xF0FF) == 0xE0A1) {
-
-            if (!keyboard.IsKeyPressed(V[x])) {
+            
+            if (!keyboard.IsKeyDown(V[x])) {
                 pc += 4;
             } else {
                 pc += 2;
@@ -315,8 +330,8 @@ public class CPU
         // Как только клавиша будет нажата записать ее номер в регистр Vx и перейти к выполнению следующей инструкции.
         if ((opcode & 0xF0FF) == 0xF00A) {
             
-            keyboard.SetKey(x, V);
-            pc += 2;
+            waitingForKey = true;
+            waitingRegister = x;
             return;
         } 
         

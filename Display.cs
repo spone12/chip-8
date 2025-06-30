@@ -4,7 +4,7 @@ public class Display
 {
     public const ushort ScreenWidth = 64;            // Ширина дисплея CHIP-8
     public const ushort ScreenHeight = 32;           // Высота дисплея CHIP-8
-    public const ushort PixelSize = 10;           // Размер пикселей
+    public const ushort PixelSize = 10;              // Размер пикселей
     public const ushort FPS = 100;
 
     public bool[,] pixels = new bool[ScreenWidth, ScreenHeight]; // Массив для хранения состояния пикселей
@@ -40,7 +40,7 @@ public class Display
         bool collision = false; // Столкновение пикселей
         
         // Координаты начала рисования на экране
-        // Получаем значение из регистра V[x] и V[y], применяем модуль по ширине и высоте, чтобы не вылезать за края экрана
+        // Получение значения из регистра V[x] и V[y], применяем модуль по ширине и высоте, чтобы не вылезать за края экрана
         int startX = V[x] % ScreenWidth;
         int startY = V[y] % ScreenHeight;
         

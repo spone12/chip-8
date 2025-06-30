@@ -33,9 +33,19 @@ public class Chip8
             while (!Raylib.WindowShouldClose()) {
                 Raylib.BeginDrawing();
                 Raylib.ClearBackground(Color.Black);
-
+                
+                keyboard.Update();
                 cpu.Cycle();
-                display.Draw();
+                
+                if (cpu.isDrawFlagRender)
+                {
+                    if (cpu.isDrawFlagRender) {
+                        display.Draw();
+                        cpu.drawFlag = false;
+                    }
+                } else {
+                    display.Draw();
+                }
 
                 Raylib.EndDrawing();
             }
