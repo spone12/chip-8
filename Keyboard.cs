@@ -2,21 +2,49 @@ using Raylib_cs;
 
 public class Keyboard
 {
-    private bool[] keys = new bool[16];
-    
-    private readonly KeyboardKey[] keyMap = new KeyboardKey[16] // 16 клавиш (0–F), как на старом калькуляторе
+    /// <summary>
+    /// 16 клавиш (0–F), как на старом калькуляторе
+    /// </summary>
+    private readonly KeyboardKey[] keyMap = new KeyboardKey[16] 
     {
-        KeyboardKey.X, KeyboardKey.One, KeyboardKey.Two, KeyboardKey.Three,
-        KeyboardKey.Q, KeyboardKey.W, KeyboardKey.E, KeyboardKey.A,
-        KeyboardKey.S, KeyboardKey.D, KeyboardKey.Z, KeyboardKey.C,
-        KeyboardKey.Four, KeyboardKey.R, KeyboardKey.F, KeyboardKey.V
+        KeyboardKey.X,     // 0
+        KeyboardKey.One,   // 1
+        KeyboardKey.Two,   // 2
+        KeyboardKey.Three, // 3
+        KeyboardKey.Q,     // 4
+        KeyboardKey.W,     // 5
+        KeyboardKey.E,     // 6
+        KeyboardKey.A,     // 7
+        KeyboardKey.S,     // 8
+        KeyboardKey.D,     // 9
+        KeyboardKey.Z,     // A (10)
+        KeyboardKey.C,     // B (11)
+        KeyboardKey.Four,  // C (12)
+        KeyboardKey.R,     // D (13)
+        KeyboardKey.F,     // E (14)
+        KeyboardKey.V      // F (15)
     };
     
+    /// <summary>
+    /// Проверка нажатия клавиши
+    /// </summary>
+    /// <param name="chip8Key"></param>
+    /// <returns>
+    /// Возвращает, была ли нажата клавиша
+    /// </returns>
     public bool IsKeyDown(int chip8Key)
     {
         return Raylib.IsKeyDown(keyMap[chip8Key]);
     }
-
+    
+    /// <summary>
+    /// Ожидание нажатия клавиши
+    /// </summary>
+    /// <param name="V"></param>
+    /// <param name="waitingRegister"></param>
+    /// <returns>
+    /// Возврат bool'евого значения ожидания, что клавиша была нажата
+    /// </returns>
     public bool WaitForKey(byte[] V, byte waitingRegister) 
     {
         for (byte i = 0; i <= 0xF; i++) {
@@ -27,12 +55,5 @@ public class Keyboard
         }
 
         return false;
-    }
-    
-    public void Update()
-    {
-        for (byte i = 0; i <= 0xF; i++) {
-            keys[i] = Raylib.IsKeyDown(keyMap[i]);
-        }
     }
 }

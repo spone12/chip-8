@@ -20,13 +20,22 @@ public class CPU
     private bool waitingForKey = false;   // Ожидание ввода с клавиатуры
     private byte waitingRegister = 0;     // Ожидаемый регистр ввода
     
+    /// <summary>
+    /// Создание процессора, передавая ему ссылки на остальные компоненты
+    /// </summary>
+    /// <param name="memory">Память</param>
+    /// <param name="display">Экран</param>
+    /// <param name="keyboard">Клавиатура</param>
     public CPU(Memory memory, Display display, Keyboard keyboard)
     {
         this.memory = memory;             // Присвоение памяти
         this.display = display;           // Присвоение дисплея
         this.keyboard = keyboard;         // Присвоение клавиатуры
     }
-
+    
+    /// <summary>
+    /// Основной цикл вызова опкодов
+    /// </summary>
     public void Cycle()
     {
         // Fx0A - Ожидание ввода с клавиатуры
@@ -51,7 +60,11 @@ public class CPU
             soundTimer--;
         }
     }
-
+    
+    /// <summary>
+    /// Исполнение опкодов
+    /// </summary>
+    /// <param name="opcode">Опкод</param>
     private void Execute(ushort opcode)
     {
         // 00E0 CLS Очистить экран

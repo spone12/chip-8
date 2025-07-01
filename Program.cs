@@ -1,5 +1,5 @@
 ﻿class Program
-{
+{   
     static void Main(string[] args)
     {
         var chip8 = new Chip8(); // Создание экземпляра эмулятора

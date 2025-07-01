@@ -6,7 +6,7 @@ public class Chip8
     private Memory memory;                 // Память (4КБ)
     private Display display;               // Дисплей (64x32 пикселя)
     private Keyboard keyboard;             // Клавиатура (16 клавиш)
-
+    
     public Chip8()
     {
         memory = new Memory();             // Инициализация памяти
@@ -14,7 +14,11 @@ public class Chip8
         keyboard = new Keyboard();         // Инициализация клавиатуры
         cpu = new CPU(memory, display, keyboard); // Создание процессора, передавая ему ссылки на остальные компоненты
     }
-
+    
+    /// <summary>
+    /// Загрузка Rom-файла игры в память
+    /// </summary>
+    /// <param name="path">Путь к Rom файлу</param>
     public void LoadRom(string path)
     {
         if (!File.Exists(path)) {
@@ -25,7 +29,10 @@ public class Chip8
         var data = File.ReadAllBytes(path); // Чтение содержимого ROM-файла в байтовый массив
         memory.LoadProgram(data); // Загрузка программы в память, начиная с адреса 0x200
     }
-
+    
+    /// <summary>
+    /// Основной метод программы, цикл вызова
+    /// </summary>
     public void Run()
     {
         try
@@ -34,7 +41,6 @@ public class Chip8
                 Raylib.BeginDrawing();
                 Raylib.ClearBackground(Color.Black);
                 
-                keyboard.Update();
                 cpu.Cycle();
                 
                 if (cpu.isDrawFlagRender)

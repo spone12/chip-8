@@ -23,13 +23,20 @@ public class Memory
         0xF0, 0x80, 0xF0, 0x80, 0x80  // F
     };
 
-    // Индексатор: позволяет обращаться к памяти как к массиву, например memory[0x200]
+    /// <summary>
+    /// Индексатор: позволяет обращаться к памяти как к массиву, например memory[0x200]
+    /// </summary>
+    /// <param name="index"></param>
     public byte this[int index]
     {
         get => memory[index];          // Получить байт по адресу
         set => memory[index] = value; // Установить байт по адресу
     }
-
+    
+    /// <summary>
+    /// Загрузка игры в память
+    /// </summary>
+    /// <param name="program"></param>
     public void LoadProgram(byte[] program)
     {
         // Копирование шрифтов в память, начиная с адреса 0x0 (0)
