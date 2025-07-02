@@ -10,76 +10,110 @@ public class Menu
     /// Возвращает путь выбранного ROM-а
     /// </summary>
     /// <returns></returns>
-    public string SelectMenu() 
+    public string Chip8Menu() 
     {
-        Directories();
-        List<string> aviableRoms = GetAviableRoms();
+        List<string> folders = GetRomFolders();
+        int selectedFolder = SelectMenu(folders, "Select Folder");
+        
+        while (Raylib.IsKeyDown(KeyboardKey.Enter))
+        {
+            Raylib.BeginDrawing();
+            Raylib.ClearBackground(Color.Black);
+            Raylib.DrawText("Loading", 10, 10, 20, Color.Gray);
+            Raylib.EndDrawing();
+        }
+        
+        List<string> availableRoms = GetAvailableRoms(folders[selectedFolder]);
+        int selected = SelectMenu(availableRoms, "Select Rom");
+        
+        return Path.Combine(
+            RomPath,
+            folders[selectedFolder],
+            Path.ChangeExtension(availableRoms[selected], Extension)
+        );
+    }
+    
+    /// <summary>
+    /// Возвращает Rom файлы и папки
+    /// </summary>
+    /// <param name="items"></param>
+    /// <param name="text"></param>
+    /// <param name="shouldBackParentFolder"></param>
+    /// <returns></returns>
+    private int SelectMenu(List<string> items, string text, bool shouldBackParentFolder = false) 
+    {
         int selected = 0;
 
         while (!Raylib.WindowShouldClose())
         {
             // Ввод
-            if (Raylib.IsKeyPressed(KeyboardKey.Down)) selected = (selected + 1) % aviableRoms.Count;
-            if (Raylib.IsKeyPressed(KeyboardKey.Up)) selected = (selected - 1 + aviableRoms.Count) % aviableRoms.Count;
+            if (Raylib.IsKeyPressed(KeyboardKey.Down)) selected = (selected + 1) % items.Count;
+            if (Raylib.IsKeyPressed(KeyboardKey.Up)) selected = (selected - 1 + items.Count) % items.Count;
             if (Raylib.IsKeyPressed(KeyboardKey.Enter)) break;
 
             // Отрисовка
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Color.DarkGray);
-            Raylib.DrawText("Select ROM", 10, 10, 20, Color.Yellow);
+            Raylib.DrawText(text, 10, 10, 20, Color.Yellow);
 
-            for (int i = 0; i < aviableRoms.Count; i++) {
+            for (int i = 0; i < items.Count; i++) {
                 var color = (i == selected) ? Color.Red : Color.White;
-                Raylib.DrawText(aviableRoms[i], 20, 50 + i * 30, 20, color);
+                Raylib.DrawText(items[i], 20, 50 + i * 30, 20, color);
             }
 
             Raylib.EndDrawing();
         }
-        
-        return RomPath + aviableRoms[selected] + "." + Extension;
+        return selected;
     }
     
     /// <summary>
     /// 
     /// </summary>
-    public static void Directories()
+    /// <returns></returns>
+    private List<string> GetRomFolders() 
     {
-        try
-        {
-            if (Directory.Exists(RomPath))
+        List<string> folders = new List<string>();
+        
+        try {
+            string directory = Path.Combine(Directory.GetCurrentDirectory(), RomPath);
+            
+            if (Directory.Exists(directory))
             {
-                string[] folders = Directory.GetDirectories(
-                    Path.Combine(Directory.GetCurrentDirectory(), RomPath)
-                );
-
-                foreach (string folder in folders) {
-                    Console.WriteLine(Path.GetFileName(folder));
+                foreach (string folder in Directory.GetDirectories(directory)) {
+                    folders.Add(Path.GetFileName(folder));
                 }
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             Console.WriteLine($"Ошибка: {ex.Message}");
         }
+        
+        return folders;
     }
     
+  
     /// <summary>
     /// Возвращает список доступных программ для запуска
     /// </summary>
+    /// <param name="folder"></param>
     /// <returns></returns>
-    private List<string> GetAviableRoms() 
+    private List<string> GetAvailableRoms(string folder) 
     {
-        List<string> aviableRoms = new List<string>();
+        List<string> availableRoms = new List<string>();
         string searchExtensionPattern = $"*.{"ch8"}";
-        string[] filePaths = Directory.GetFiles(RomPath, searchExtensionPattern);
+        string[] filePaths = Directory.GetFiles(
+            Path.Combine(RomPath, folder),
+            searchExtensionPattern
+        );
 
         if (filePaths.Length > 0) {
             foreach (string filePath in filePaths) {
                 string fileName = Path.GetFileNameWithoutExtension(filePath);
-                aviableRoms.Add(fileName);
+                availableRoms.Add(fileName);
+                
+                Console.WriteLine(filePath);
             }
         }
 
-        return aviableRoms;
+        return availableRoms;
     }
 }

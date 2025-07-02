@@ -22,7 +22,7 @@ public class Chip8
     public void Menu() 
     {
         var menu = new Menu();
-        string rom = menu.SelectMenu();
+        string rom = menu.Chip8Menu();
         LoadRom(rom); // Загрузка ROM-файла (игра/программа в формате CHIP-8)
     }
     
