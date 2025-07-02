@@ -14,9 +14,20 @@ public class Chip8
         keyboard = new Keyboard();         // Инициализация клавиатуры
         cpu = new CPU(memory, display, keyboard); // Создание процессора, передавая ему ссылки на остальные компоненты
     }
+
+    /// <summary>
+    /// Возвращает наименование выбранного ROM-а
+    /// </summary>
+    /// <returns></returns>
+    public void Menu() 
+    {
+        var menu = new Menu();
+        string rom = menu.SelectMenu();
+        LoadRom(rom); // Загрузка ROM-файла (игра/программа в формате CHIP-8)
+    }
     
     /// <summary>
-    /// Загрузка Rom-файла игры в память
+    /// Загрузка Rom-файла игры в память 
     /// </summary>
     /// <param name="path">Путь к Rom файлу</param>
     public void LoadRom(string path)
