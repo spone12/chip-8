@@ -24,7 +24,7 @@ public class Menu
         if ((selectedRom + 1) == availableRoms.Count)
         {
             Loading();
-            Chip8Menu();
+            return Chip8Menu();
         }
 
         return Path.Combine(
