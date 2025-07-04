@@ -48,7 +48,8 @@ public class Chip8
     {
         try
         {
-            while (!Raylib.WindowShouldClose()) {
+            while (!Raylib.WindowShouldClose())
+            {
                 Raylib.BeginDrawing();
                 Raylib.ClearBackground(Color.Black);
                 
@@ -56,10 +57,8 @@ public class Chip8
                 
                 if (cpu.isDrawFlagRender)
                 {
-                    if (cpu.isDrawFlagRender) {
-                        display.Draw();
-                        cpu.drawFlag = false;
-                    }
+                    display.Draw();
+                    cpu.drawFlag = false;
                 } else {
                     display.Draw();
                 }
