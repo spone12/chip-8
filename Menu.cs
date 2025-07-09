@@ -147,6 +147,7 @@ public class Menu
                 {
                     folders.Add(Path.GetFileName(folder));
                 }
+                folders.Sort();
             }
         }
         catch (Exception ex)
@@ -178,8 +179,6 @@ public class Menu
             {
                 string fileName = Path.GetFileNameWithoutExtension(filePath);
                 availableRoms.Add(fileName);
-
-                Console.WriteLine(filePath);
             }
         }
 
