@@ -6,6 +6,10 @@ public class Menu
 
     private const string Extension = "ch8"; // Расширение файла
 
+    private const int RomsPerPage = 6; // Количество ROM'ов на странице
+    
+    private int _currentPage = 1; // Текущая страница
+
     /// <summary>
     /// Возвращает путь выбранного ROM-а
     /// </summary>
@@ -21,7 +25,7 @@ public class Menu
         int selectedRom = SelectMenu(availableRoms, "Select Rom", true);
 
         // Если выбран возврат к папкам
-        if ((selectedRom + 1) == availableRoms.Count)
+        if (selectedRom == -1)
         {
             Loading();
             return Chip8Menu();
@@ -44,36 +48,85 @@ public class Menu
     private int SelectMenu(List<string> items, string text, bool shouldBackParentFolder = false)
     {
         int selected = 0;
-        int itemsCount = items.Count;
-
-        // Возврат к выбору папок
-        if (shouldBackParentFolder)
-        {
-            itemsCount++;
-            items.Add("Back");
-        }
-
+        string[] currentItemsPage = CurrentPageRoms(items, shouldBackParentFolder);
+        
         while (!Raylib.WindowShouldClose())
         {
             // Ввод
-            if (Raylib.IsKeyPressed(KeyboardKey.Down)) selected = (selected + 1) % items.Count;
-            if (Raylib.IsKeyPressed(KeyboardKey.Up)) selected = (selected - 1 + items.Count) % items.Count;
             if (Raylib.IsKeyPressed(KeyboardKey.Enter)) break;
+            if (Raylib.IsKeyPressed(KeyboardKey.Down)) selected = (selected + 1) % currentItemsPage.Length;
+            if (Raylib.IsKeyPressed(KeyboardKey.Up)) selected = (selected - 1 + currentItemsPage.Length) % currentItemsPage.Length;
+            
+            if (Raylib.IsKeyPressed(KeyboardKey.Left)) {
+                currentItemsPage = CurrentPageRoms(items, shouldBackParentFolder, "LEFT");
+            }
+            
+            if (Raylib.IsKeyPressed(KeyboardKey.Right)) {
+                currentItemsPage = CurrentPageRoms(items, shouldBackParentFolder, "RIGHT");
+            }
 
             // Отрисовка
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Color.DarkGray);
             Raylib.DrawText(text, 10, 10, 20, Color.Yellow);
-
-            for (int i = 0; i < itemsCount; i++)
+            
+            for (int i = 0; i < currentItemsPage.Length; i++)
             {
                 var color = (i == selected) ? Color.Red : Color.White;
-                Raylib.DrawText(items[i], 20, 50 + i * 30, 20, color);
+                Raylib.DrawText(currentItemsPage[i], 20, 50 + i * 30, 20, color);
             }
-
+            
             Raylib.EndDrawing();
         }
-        return selected;
+        
+        if (selected == (currentItemsPage.Length - 1)) {
+            return -1;
+        } else {
+            if (_currentPage > 1) {
+                return _currentPage * RomsPerPage + selected;
+            } else {
+                return selected;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Получает ROM'ы текущей страницы
+    /// </summary>
+    /// <param name="items"></param>
+    /// <param name="shouldBackParentFolder"></param>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    private string[] CurrentPageRoms(List<string> items, bool shouldBackParentFolder, string type = "") {
+        
+        int itemsCount = items.Count;
+
+        // Возврат к выбору папок
+        if (shouldBackParentFolder) itemsCount++;
+        int countPages = itemsCount / RomsPerPage;
+        
+        if (countPages == 0) countPages = 1;
+
+        if (type == "RIGHT") {
+            if (countPages >= (_currentPage + 1))
+                _currentPage++;
+        } else if (type == "LEFT") {
+            if ((_currentPage - 1) >= 1)
+                _currentPage--;
+        } else {
+            _currentPage = 1;
+        }
+
+        // Пропуск ROM'ов предыдущих страниц
+        int skip = 0;
+        if (_currentPage > 1) {
+            skip = _currentPage * RomsPerPage;
+        }
+        
+        string[] currentItemsPage = [];
+        
+        currentItemsPage = items.Skip(skip).Take(RomsPerPage).ToArray();
+        return currentItemsPage.Append(shouldBackParentFolder ? "Back" : "Exit").ToArray();
     }
 
     /// <summary>
@@ -138,6 +191,7 @@ public class Menu
     /// </summary>
     private void Loading(string message = "Loading")
     {
+        _currentPage = 1;
         while (Raylib.IsKeyDown(KeyboardKey.Enter))
         {
             Raylib.BeginDrawing();
