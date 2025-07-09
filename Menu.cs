@@ -9,6 +9,7 @@ public class Menu
     private const int RomsPerPage = 6; // Количество ROM'ов на странице
     
     private int _currentPage = 1; // Текущая страница
+    private int _countPages = 1;
 
     /// <summary>
     /// Возвращает путь выбранного ROM-а
@@ -69,6 +70,16 @@ public class Menu
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Color.DarkGray);
             Raylib.DrawText(text, 10, 10, 20, Color.Yellow);
+
+            if (shouldBackParentFolder) {
+                Raylib.DrawText(
+                    string.Format("Page {0} / {1}", _currentPage, _countPages),
+                    510,
+                    300,
+                    20,
+                    Color.Yellow
+                );    
+            }
             
             for (int i = 0; i < currentItemsPage.Length; i++)
             {
@@ -103,16 +114,16 @@ public class Menu
 
         // Возврат к выбору папок
         if (shouldBackParentFolder) itemsCount++;
-        int countPages = itemsCount / RomsPerPage;
+        _countPages = itemsCount / RomsPerPage;
         
-        if (countPages == 0) countPages = 1;
+        if (_countPages == 0) _countPages = 1;
 
         if (type == "RIGHT") {
-            if (countPages >= (_currentPage + 1))
-                _currentPage++;
+            _currentPage++;
+            if (_currentPage > _countPages)  _currentPage = 1;
         } else if (type == "LEFT") {
-            if ((_currentPage - 1) >= 1)
-                _currentPage--;
+            _currentPage--;
+            if (1 >= _currentPage) _currentPage = _countPages;
         } else {
             _currentPage = 1;
         }
