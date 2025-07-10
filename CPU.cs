@@ -80,6 +80,12 @@ public class CPU
             return;
         }
 
+        // 0000 Игнорируем, как пустой
+        if (opcode == 0000) {
+            pc += 2;
+            return;
+        }
+
         ushort NNN = (ushort)(opcode & 0x0FFF);
         byte NN = (byte)(opcode & 0x00FF);
         byte x = (byte)((opcode & 0x0F00) >> 8);
@@ -332,8 +338,7 @@ public class CPU
         }
         
         // Fx07 LD Vx, DT Скопировать значение таймера задержки в регистр Vx
-        if ((opcode & 0xFF07) == 0xF007) {
-
+        if ((opcode & 0xF0FF) == 0xF007) {
             V[x] = delayTimer;
             pc += 2;
             return;
@@ -412,7 +417,7 @@ public class CPU
            pc += 2;
            return;
        }
-       
+
        Console.WriteLine($"Неизвестный opcode: {opcode:X4}");
     }
 }
