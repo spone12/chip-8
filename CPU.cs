@@ -34,6 +34,26 @@ public class CPU
     }
     
     /// <summary>
+    /// Восстанавливает свойства процессора в исходное состояние
+    /// </summary>
+    public void Reset() 
+    {
+        Array.Clear(V, 0, V.Length);
+        I = 0;
+        pc = 0x200;
+        stack.Clear();
+        
+        delayTimer = 0;
+        soundTimer = 0;
+        
+        drawFlag = false;
+        isDrawFlagRender = false;
+        
+        waitingForKey = false;
+        waitingRegister = 0;
+    }
+    
+    /// <summary>
     /// Основной цикл вызова опкодов
     /// </summary>
     public void Cycle()

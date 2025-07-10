@@ -39,6 +39,8 @@ public class Memory
     /// <param name="program"></param>
     public void LoadProgram(byte[] program)
     {
+        // Очистка памяти
+        Array.Clear(memory, 0, memory.Length);
         // Копирование шрифтов в память, начиная с адреса 0x0 (0)
         Array.Copy(Fonts, 0, memory, 0x0, Fonts.Length);
         // Копирование программы в память, начиная с адреса 0x200 (512)

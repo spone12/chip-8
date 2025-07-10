@@ -21,6 +21,9 @@ public class Chip8
     /// <returns></returns>
     public void Menu() 
     {
+        display.Clear();
+        cpu.Reset();
+        
         var menu = new Menu();
         string rom = menu.Chip8Menu();
         LoadRom(rom); // Загрузка ROM-файла (игра/программа в формате CHIP-8)
@@ -50,6 +53,9 @@ public class Chip8
         {
             while (!Raylib.WindowShouldClose())
             {
+                // Закрытие программы и выход в главное меню
+                if (Raylib.IsKeyPressed(KeyboardKey.F1)) Menu();
+                
                 Raylib.BeginDrawing();
                 Raylib.ClearBackground(Color.Black);
                 
