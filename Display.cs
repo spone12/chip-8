@@ -15,6 +15,9 @@ public class Display
     public Display()
     {
         Raylib.InitWindow(ScreenWidth * PixelSize, ScreenHeight * PixelSize, "CHIP-8");
+
+        SetWindowIcon();
+
         Raylib.InitAudioDevice();
         Raylib.SetTargetFPS(FPS);
     }
@@ -26,6 +29,19 @@ public class Display
     public static void SetWindowTitle(string title = "CHIP-8")
     {
         Raylib.SetWindowTitle(title);
+    }
+
+    /// <summary>
+    /// Установка иконки программы
+    /// </summary>
+    /// <param name="path"></param>
+    private void SetWindowIcon(string path = "Images/Icons", string fileName = "icon.png")
+    {
+        Image icon = Raylib.LoadImage(
+            Path.Combine(path, fileName)
+        );
+        Raylib.SetWindowIcon(icon);
+        Raylib.UnloadImage(icon);
     }
 
     /// <summary>
