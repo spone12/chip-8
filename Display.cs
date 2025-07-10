@@ -8,17 +8,26 @@ public class Display
     public const ushort FPS = 100;
 
     public bool[,] pixels = new bool[ScreenWidth, ScreenHeight]; // Массив для хранения состояния пикселей
-    
+
     /// <summary>
     /// Инициализация окна дисплея
     /// </summary>
-    public Display() 
+    public Display()
     {
         Raylib.InitWindow(ScreenWidth * PixelSize, ScreenHeight * PixelSize, "CHIP-8");
         Raylib.InitAudioDevice();
         Raylib.SetTargetFPS(FPS);
     }
-    
+
+    /// <summary>
+    /// Изменение наименования окна программы
+    /// </summary>
+    /// <param name="title"></param>
+    public static void SetWindowTitle(string title = "CHIP-8")
+    {
+        Raylib.SetWindowTitle(title);
+    }
+
     /// <summary>
     /// Очистка экрана (все пиксели в false)
     /// </summary>

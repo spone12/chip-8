@@ -32,6 +32,8 @@ public class Menu
             return Chip8Menu();
         }
 
+        Display.SetWindowTitle(availableRoms[selectedRom]);
+
         return Path.Combine(
             RomPath,
             folders[selectedFolder],
