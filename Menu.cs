@@ -89,12 +89,12 @@ public class Menu
             
             Raylib.EndDrawing();
         }
-        
+
         if (selected == (currentItemsPage.Length - 1)) {
             return -1;
         } else {
             if (_currentPage > 1) {
-                return _currentPage * RomsPerPage + selected;
+                return (_currentPage - 1) * RomsPerPage + selected;
             } else {
                 return selected;
             }
@@ -114,16 +114,16 @@ public class Menu
 
         // Возврат к выбору папок
         if (shouldBackParentFolder) itemsCount++;
-        _countPages = itemsCount / RomsPerPage;
         
-        if (_countPages == 0) _countPages = 1;
+        _countPages = itemsCount / RomsPerPage;
+        _countPages++;
 
         if (type == "RIGHT") {
             _currentPage++;
-            if (_currentPage > _countPages)  _currentPage = 1;
+            if (_currentPage > _countPages) _currentPage = 1;
         } else if (type == "LEFT") {
             _currentPage--;
-            if (1 >= _currentPage) _currentPage = _countPages;
+            if (1 > _currentPage) _currentPage = _countPages;
         } else {
             _currentPage = 1;
         }
@@ -131,7 +131,7 @@ public class Menu
         // Пропуск ROM'ов предыдущих страниц
         int skip = 0;
         if (_currentPage > 1) {
-            skip = _currentPage * RomsPerPage;
+            skip = (_currentPage - 1) * RomsPerPage;
         }
         
         string[] currentItemsPage = [];
