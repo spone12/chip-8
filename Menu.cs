@@ -116,9 +116,11 @@ public class Menu
 
         // Возврат к выбору папок
         if (shouldBackParentFolder) itemsCount++;
-        
+    
         _countPages = itemsCount / RomsPerPage;
-        _countPages++;
+        
+        if (_countPages == 0 || itemsCount > (RomsPerPage * _countPages + 1))    
+            _countPages++;
 
         if (type == "RIGHT") {
             _currentPage++;
