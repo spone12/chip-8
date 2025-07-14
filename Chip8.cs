@@ -6,6 +6,7 @@ public class Chip8
     private Memory memory;                 // Память (4КБ)
     private Display display;               // Дисплей (64x32 пикселя)
     private Keyboard keyboard;             // Клавиатура (16 клавиш)
+    private string currentRom = "";        // Наименование запущенной программы
     
     public Chip8()
     {
@@ -18,15 +19,21 @@ public class Chip8
     /// <summary>
     /// Возвращает наименование выбранного ROM-а
     /// </summary>
+    /// <param name="isRestartProgram">Перезапуск программы</param>
     /// <returns></returns>
-    public void Menu() 
+    public void Menu(bool isRestartProgram = false) 
     {
         display.Clear();
         cpu.Reset();
-        
+
+        if (isRestartProgram) {
+            LoadRom(currentRom);
+            return;
+        }
+
         var menu = new Menu();
-        string rom = menu.Chip8Menu();
-        LoadRom(rom); // Загрузка ROM-файла (игра/программа в формате CHIP-8)
+        currentRom = menu.Chip8Menu();
+        LoadRom(currentRom); // Загрузка ROM-файла (игра/программа в формате CHIP-8)
     }
     
     /// <summary>
@@ -53,8 +60,10 @@ public class Chip8
         {
             while (!Raylib.WindowShouldClose())
             {
+                // Перезапуск программы
+                if (Raylib.IsKeyPressed(KeyboardKey.F1)) Menu(true);
                 // Закрытие программы и выход в главное меню
-                if (Raylib.IsKeyPressed(KeyboardKey.F1)) Menu();
+                if (Raylib.IsKeyPressed(KeyboardKey.F2)) Menu();
                 
                 Raylib.BeginDrawing();
                 Raylib.ClearBackground(Color.Black);
