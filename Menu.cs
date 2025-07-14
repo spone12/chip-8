@@ -22,12 +22,16 @@ public class Menu
 
         Loading();
 
+        // Выход из программы
+        if (selectedFolder == -1) {
+            Raylib.CloseWindow();
+        }
+
         List<string> availableRoms = GetAvailableRoms(folders[selectedFolder]);
         int selectedRom = SelectMenu(availableRoms, "Select Rom", true);
-
-        // Если выбран возврат к папкам
-        if (selectedRom == -1)
-        {
+        
+        // Возврат к папкам
+        if (selectedRom == -1) {
             Loading();
             return Chip8Menu();
         }
