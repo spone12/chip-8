@@ -17,6 +17,8 @@ public class Menu
     /// <returns></returns>
     public string Chip8Menu()
     {
+        Display.SetWindowTitle();
+
         List<string> folders = GetRomFolders();
         int selectedFolder = SelectMenu(folders, "Select Folder");
 
