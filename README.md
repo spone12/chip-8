@@ -60,6 +60,7 @@
 	|A|0|B|F|	=>	|Z|X|C|V|
 
 
-**Источники информации, откуда было взято описание:**
+**Список источников и репозиториев, на основе которых собрана информация:**
 - [Habr](https://habr.com/ru/companies/skillfactory/articles/593525/ "Habr")
 - [Opcode](https://emunix.org/post/writing-chip-8-emulator-part-2/ "Opcode")
+- [Chip8-roms](https://github.com/kripod/chip8-roms "Chip8-roms")
